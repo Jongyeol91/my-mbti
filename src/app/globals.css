@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme inline {
+  --font-display: "Outfit", var(--font-sans);
+  /* Core colors */
+  --color-background: #FAF7F2;
+  --color-foreground: #2D2A26;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #F3EFEA;
+  --color-border: #E8E2D9;
+  --color-muted: #B8B0A4;
+
+  /* Primary action */
+  --color-primary: #E8734A;
+  --color-primary-light: #F0956F;
+  --color-primary-hover: #D4623B;
+
+  /* Secondary */
+  --color-secondary: #4A7E8E;
+
+  /* Accent */
+  --color-accent: #D4A84B;
+
+  /* MBTI Dimension Colors */
+  --color-energy-e: #E8734A;
+  --color-energy-i: #4A7E8E;
+  --color-info-s: #D4A84B;
+  --color-info-n: #7B6CA5;
+  --color-decision-t: #4A8E6E;
+  --color-decision-f: #C76B7E;
+  --color-lifestyle-j: #5B7BAE;
+  --color-lifestyle-p: #C4884A;
+
+  /* Legacy compat (for components not yet updated) */
+  --color-mint: #4A8E6E;
+  --color-sky: #5B7BAE;
+
+  --font-sans: var(--font-pretendard, "Pretendard", system-ui, -apple-system, sans-serif);
+
+  --spacing-container-x-mobile: 1.25rem;
+  --spacing-container-x-tablet: 2rem;
+  --spacing-container-x-desktop: 2.5rem;
+  --height-header: 3.5rem;
+  --height-bottom-nav: 3.5rem;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  min-height: 100dvh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Cute scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-muted);
+  border-radius: 999px;
+}
+
+/* Prevent overscroll bounce on iOS */
+html {
+  overscroll-behavior: none;
+}
+
+/* Safe area insets for notched devices */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  :root {
+    --safe-area-bottom: env(safe-area-inset-bottom);
+    --safe-area-top: env(safe-area-inset-top);
+  }
+}
+
+/* Mobile bottom nav spacing - adds padding so content isn't hidden behind bottom nav */
+.has-bottom-nav {
+  padding-bottom: calc(var(--height-bottom-nav) + env(safe-area-inset-bottom, 0px));
+}
+
+/* Hide scrollbar during swipe interactions on mobile */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Swipe card touch optimization */
+[data-swipe-card] {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
