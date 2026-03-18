@@ -90,7 +90,7 @@ export default function ABQuestionCard({ question, onAnswer }: ABQuestionCardPro
                          bg-surface border-2
                          ${isSelected ? style.selected : style.idle}
                          text-left sm:text-center text-base sm:text-lg leading-relaxed
-                         shadow-sm hover:shadow-md transition-all duration-200
+                         shadow-sm hover:shadow-md transition-shadow duration-200
                          cursor-pointer disabled:cursor-default
                          min-h-[64px] sm:min-h-[100px]
                          flex items-center sm:justify-center`}

@@ -387,7 +387,7 @@ export default function SwipeQuestionCard({ question, onAnswer }: SwipeQuestionC
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3 }}
           whileHover={{ scale: 1.05, y: -2 }}
-          whileTap={{ scale: 0.92 }}
+          whileTap={{ scale: 0.96 }}
           onClick={() => handleButtonAnswer('left')}
           disabled={exiting}
           className="flex-1 py-3 sm:py-3.5 md:py-4 rounded-2xl
@@ -395,7 +395,7 @@ export default function SwipeQuestionCard({ question, onAnswer }: SwipeQuestionC
                      text-sm sm:text-base md:text-lg
                      border-2 border-primary/20 hover:border-primary/40
                      hover:bg-primary/15 hover:shadow-md hover:shadow-primary/10
-                     transition-all duration-200
+                     transition-shadow duration-200
                      cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed
                      flex items-center justify-center gap-1.5"
         >
@@ -407,7 +407,7 @@ export default function SwipeQuestionCard({ question, onAnswer }: SwipeQuestionC
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3 }}
           whileHover={{ scale: 1.05, y: -2 }}
-          whileTap={{ scale: 0.92 }}
+          whileTap={{ scale: 0.96 }}
           onClick={() => handleButtonAnswer('right')}
           disabled={exiting}
           className="flex-1 py-3 sm:py-3.5 md:py-4 rounded-2xl
@@ -415,7 +415,7 @@ export default function SwipeQuestionCard({ question, onAnswer }: SwipeQuestionC
                      text-sm sm:text-base md:text-lg
                      border-2 border-mint/30 hover:border-mint/50
                      hover:bg-mint/15 hover:shadow-md hover:shadow-mint/10
-                     transition-all duration-200
+                     transition-shadow duration-200
                      cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed
                      flex items-center justify-center gap-1.5"
         >

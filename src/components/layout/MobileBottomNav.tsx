@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 
 const navItems = [
   { href: "/", label: "홈" },
-  { href: "/quiz", label: "테스트" },
+  { href: "/quiz/select", label: "테스트" },
   { href: "/encyclopedia", label: "유형 백과" },
   { href: "/result", label: "내 결과" },
 ] as const;
@@ -19,13 +19,12 @@ export default function MobileBottomNav() {
   const pathname = usePathname();
 
   // Hide bottom nav during active quiz
-  const isQuizActive = pathname.startsWith("/quiz");
+  const isQuizActive = pathname === "/quiz";
   if (isQuizActive) return null;
 
   return (
     <nav className="fixed right-0 bottom-0 left-0 z-50 md:hidden">
-      {/* Frosted glass background */}
-      <div className="absolute inset-0 -z-10 border-t border-foreground/5 bg-background/80 backdrop-blur-lg" />
+      <div className="absolute inset-0 -z-10 border-t border-border bg-background" />
 
       <div
         className="flex items-center justify-around"
@@ -41,7 +40,7 @@ export default function MobileBottomNav() {
             <Link
               key={item.href}
               href={item.href}
-              className="relative flex flex-1 flex-col items-center gap-0.5 py-2"
+              className="relative flex flex-1 flex-col items-center gap-0.5 py-3"
             >
               {isActive && (
                 <motion.span
@@ -51,8 +50,8 @@ export default function MobileBottomNav() {
                 />
               )}
               <span
-                className={`text-[10px] font-medium transition-colors ${
-                  isActive ? "text-primary" : "text-foreground/50"
+                className={`text-xs font-medium transition-colors ${
+                  isActive ? "text-foreground" : "text-foreground/40"
                 }`}
               >
                 {item.label}

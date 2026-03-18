@@ -25,7 +25,7 @@ export default function ProgressBar({ current, total, progress, axis }: Progress
       <div className="flex items-center justify-between mb-1.5 sm:mb-2">
         <div className="flex items-center gap-1.5">
           {/* 질문 번호 — 숫자 플립 애니메이션 */}
-          <span className="text-xs sm:text-sm font-bold text-primary flex items-center">
+          <span className="text-xs sm:text-sm font-bold text-primary flex items-center tabular-nums">
             Q
             <span className="relative inline-flex overflow-hidden h-[1.2em] w-[1.5em] justify-center">
               <AnimatePresence mode="popLayout">
@@ -63,7 +63,7 @@ export default function ProgressBar({ current, total, progress, axis }: Progress
               damping: 30,
               mass: 0.5,
             }}
-            className="text-xs sm:text-sm font-medium text-primary/80"
+            className="text-xs sm:text-sm font-medium text-primary/80 tabular-nums"
           >
             {progress}%
           </motion.span>

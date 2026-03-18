@@ -134,14 +134,14 @@ export default function ScenarioQuestionCard({ question, onAnswer }: ScenarioQue
                   ease: 'easeOut',
                 }}
                 whileHover={selectedIdx === null ? { scale: 1.02, y: -2 } : undefined}
-                whileTap={selectedIdx === null ? { scale: 0.97 } : undefined}
+                whileTap={selectedIdx === null ? { scale: 0.96 } : undefined}
                 onClick={() => handleSelect(idx, option.value)}
                 disabled={selectedIdx !== null}
                 className={`
                   w-full p-4 sm:p-5 md:p-6 rounded-2xl md:rounded-3xl
                   bg-surface border-2 text-left
                   text-sm sm:text-base md:text-lg leading-relaxed
-                  shadow-sm transition-all duration-200
+                  shadow-sm transition-shadow duration-200
                   flex items-start gap-3
                   ${isSelected
                     ? `${selectedAccents[idx % selectedAccents.length]} shadow-md`

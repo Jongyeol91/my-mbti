@@ -4,12 +4,12 @@
 @theme inline {
   --font-display: "Outfit", var(--font-sans);
   /* Core colors */
-  --color-background: #FAF7F2;
+  --color-background: #F8F9FA;
   --color-foreground: #2D2A26;
   --color-surface: #FFFFFF;
-  --color-surface-alt: #F3EFEA;
-  --color-border: #E8E2D9;
-  --color-muted: #B8B0A4;
+  --color-surface-alt: #F1F3F5;
+  --color-border: #DEE2E6;
+  --color-muted: #ADB5BD;
 
   /* Primary action */
   --color-primary: #E8734A;
@@ -50,6 +50,7 @@ body {
   color: var(--color-foreground);
   font-family: var(--font-sans);
   min-height: 100dvh;
+  word-break: keep-all;
 }
 
 body::before {
@@ -107,4 +108,30 @@ html {
   user-select: none;
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Typography polish */
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+
+p, li, blockquote {
+  text-wrap: pretty;
+}
+
+/* Tabular numbers for dynamic values */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Minimum hit area for interactive elements */
+button, a, [role="button"] {
+  position: relative;
+}
+
+small button::after, small a::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  /* Ensures minimum 40x40px hit area */
 }

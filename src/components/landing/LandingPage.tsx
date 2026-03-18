@@ -41,7 +41,7 @@ const modes = [
     subtitle: "약 3분 소요",
     description: "빠르게 알아보는 나의 MBTI",
     accent: "text-primary",
-    hoverBorder: "hover:border-l-primary",
+    hoverBorder: "border-l-primary",
   },
   {
     id: "deep",
@@ -50,17 +50,13 @@ const modes = [
     subtitle: "약 10분 소요",
     description: "더 정확하고 자세한 분석",
     accent: "text-secondary",
-    hoverBorder: "hover:border-l-secondary",
+    hoverBorder: "border-l-secondary",
   },
 ];
 
 export default function LandingPage() {
   return (
     <div className="relative flex min-h-dvh flex-col overflow-hidden">
-      {/* Subtle background texture blobs */}
-      <div className="pointer-events-none absolute -top-20 left-1/4 h-[500px] w-[500px] rounded-full bg-primary/8 blur-3xl" />
-      <div className="pointer-events-none absolute top-60 -right-20 h-[300px] w-[300px] rounded-full bg-secondary/8 blur-3xl" />
-      <div className="pointer-events-none absolute top-[600px] -left-20 h-[300px] w-[300px] rounded-full bg-accent/8 blur-3xl" />
 
       {/* Hero Section */}
       <motion.section
@@ -111,8 +107,11 @@ export default function LandingPage() {
             {modes.map((mode) => (
               <motion.div key={mode.id} variants={fadeInRight}>
                 <Link href={`/quiz?mode=${mode.id}`} className="group block">
-                  <div
-                    className={`relative overflow-hidden rounded-2xl border border-border border-l-4 border-l-transparent bg-surface p-6 shadow-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-lg ${mode.hoverBorder}`}
+                  <motion.div
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.96 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                    className={`relative overflow-hidden rounded-lg border-l-4 border-l-transparent bg-surface p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_2px_8px_rgba(0,0,0,0.03)] transition-shadow duration-300 ease-out hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)] ${mode.hoverBorder}`}
                   >
                     {/* Large number as visual anchor */}
                     <span className="font-display absolute -top-2 right-4 text-7xl font-black text-foreground/[0.04] select-none">
@@ -130,7 +129,7 @@ export default function LandingPage() {
                         {mode.description}
                       </p>
                     </div>
-                  </div>
+                  </motion.div>
                 </Link>
               </motion.div>
             ))}
@@ -198,7 +197,7 @@ export default function LandingPage() {
             </p>
             <Link
               href="/quiz/select"
-              className="mt-8 inline-block rounded-xl bg-primary px-10 py-4 font-display text-lg font-bold text-white shadow-sm transition-all hover:bg-primary-hover hover:shadow-md active:scale-95"
+              className="mt-8 inline-block rounded-xl bg-primary px-10 py-4 font-display text-lg font-bold text-white shadow-sm transition-shadow duration-200 hover:bg-primary-hover hover:shadow-md active:scale-[0.96]"
             >
               테스트 시작하기 →
             </Link>

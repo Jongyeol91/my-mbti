@@ -77,11 +77,11 @@ export default function MbtiPreviewCards() {
         <motion.div key={item.type} variants={cardVariants}>
           <Link href={`/types/${item.type.toLowerCase()}`}>
             <motion.div
-              whileHover={{ scale: 1.08, y: -3 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex flex-col items-center gap-1 rounded-xl border border-border bg-surface p-3 shadow-sm transition-shadow hover:shadow-md"
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              className="group relative flex flex-col items-center justify-center rounded-lg bg-surface p-3 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_2px_8px_rgba(0,0,0,0.03)] transition-shadow duration-300 ease-out hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)] cursor-pointer"
             >
-              <span className="text-xl sm:text-2xl">{item.emoji}</span>
               <ColoredType type={item.type} />
             </motion.div>
           </Link>

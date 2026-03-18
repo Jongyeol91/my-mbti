@@ -111,23 +111,23 @@ export default function TypeDetailPage({ profile }: TypeDetailPageProps) {
         >
           <SectionHeader label="강점 & 약점" accentColor={accentColor} />
           <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
-            <div className="rounded-3xl bg-emerald-50 p-4 sm:p-5">
-              <h3 className="mb-3 text-sm font-bold text-emerald-700 sm:text-base">강점</h3>
+            <div className="rounded-lg bg-surface p-4 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_2px_8px_rgba(0,0,0,0.03)] sm:p-5">
+              <h3 className="mb-3 text-sm font-bold text-foreground sm:text-base">강점</h3>
               <ul className="space-y-2">
                 {profile.strengthWeakness.strengths.map((s, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs text-emerald-800 sm:text-sm">
-                    <span className="mt-0.5 shrink-0">•</span>
+                  <li key={i} className="flex items-start gap-2 text-xs text-foreground/60 sm:text-sm">
+                    <span className="mt-0.5 shrink-0 text-decision-t">+</span>
                     <span>{s}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="rounded-3xl bg-rose-50 p-4 sm:p-5">
-              <h3 className="mb-3 text-sm font-bold text-rose-700 sm:text-base">약점</h3>
+            <div className="rounded-lg bg-surface p-4 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_2px_8px_rgba(0,0,0,0.03)] sm:p-5">
+              <h3 className="mb-3 text-sm font-bold text-foreground sm:text-base">약점</h3>
               <ul className="space-y-2">
                 {profile.strengthWeakness.weaknesses.map((w, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs text-rose-800 sm:text-sm">
-                    <span className="mt-0.5 shrink-0">•</span>
+                  <li key={i} className="flex items-start gap-2 text-xs text-foreground/60 sm:text-sm">
+                    <span className="mt-0.5 shrink-0 text-decision-f">−</span>
                     <span>{w}</span>
                   </li>
                 ))}

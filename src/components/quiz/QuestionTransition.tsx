@@ -52,7 +52,7 @@ export default function QuestionTransition({
   children,
 }: QuestionTransitionProps) {
   return (
-    <AnimatePresence mode="wait" custom={direction}>
+    <AnimatePresence mode="wait" custom={direction} initial={false}>
       <motion.div
         key={questionKey}
         custom={direction}
