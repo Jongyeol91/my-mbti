@@ -23,11 +23,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: 'MBTI 유형 | 나의 MBTI 테스트' };
   }
 
+  const BASE_URL = 'https://my-mbti-jongyeol91s-projects.vercel.app';
   return {
     title: `${profile.type} ${profile.nickname} | MBTI 유형 백과사전`,
     description: profile.summary,
+    alternates: {
+      canonical: `${BASE_URL}/encyclopedia/${type}`,
+    },
     openGraph: {
-      title: `${profile.type} - ${profile.nickname}`,
+      title: `${profile.type} ${profile.nickname} | MBTI 유형 백과사전`,
+      description: profile.summary,
+      type: 'website',
+      locale: 'ko_KR',
+      url: `${BASE_URL}/encyclopedia/${type}`,
+    },
+    twitter: {
+      card: 'summary_large_image' as const,
+      title: `${profile.type} ${profile.nickname} | MBTI 유형 백과사전`,
       description: profile.summary,
     },
   };

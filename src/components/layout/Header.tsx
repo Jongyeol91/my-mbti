@@ -9,6 +9,7 @@ const navItems = [
   { href: "/quiz?mode=simple", label: "간단 테스트" },
   { href: "/quiz?mode=deep", label: "심화 테스트" },
   { href: "/encyclopedia", label: "유형 백과" },
+  { href: "/compatibility", label: "궁합표" },
 ] as const;
 
 function HeaderNav() {

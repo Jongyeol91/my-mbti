@@ -47,8 +47,8 @@ export default function CompatibilitySection({
         if (types.length === 0) return null;
 
         return (
-          <div key={row.key} className="flex items-center gap-3 py-2.5 border-b border-border/50 last:border-0">
-            <span className="w-10 shrink-0 text-xs font-semibold text-foreground/40">
+          <div key={row.key} className={`flex items-center gap-3 py-2.5 border-b border-border/50 last:border-0 ${row.key === 'best' ? 'bg-primary/5 -mx-3 px-3 rounded-md' : ''}`}>
+            <span className={`w-10 shrink-0 text-xs font-semibold ${row.key === 'best' ? 'text-primary' : 'text-foreground/40'}`}>
               {row.label}
             </span>
             <div className="flex flex-wrap gap-1.5">

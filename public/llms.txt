@@ -1,0 +1,29 @@
+# MBTI 성격 유형 테스트
+
+> 한국어 MBTI 성격 유형 퀴즈 웹앱
+
+## 소개
+이 사이트는 MBTI 4가지 축(E/I, S/N, T/F, J/P)을 기반으로 한 성격 유형 테스트를 제공합니다.
+
+## 주요 기능
+- 간단 테스트 (12문항, 약 3분)
+- 심화 테스트 (40문항, 약 10분)
+- 16가지 유형 백과사전
+- 유형 간 궁합 비교표
+- A/B 선택, 시나리오, 카드 스와이프 등 다양한 질문 형식
+
+## 페이지
+- /: 메인 페이지
+- /quiz/select: 테스트 모드 선택
+- /quiz?mode=simple: 간단 테스트 (12문항)
+- /quiz?mode=deep: 심화 테스트 (40문항)
+- /encyclopedia: 16가지 MBTI 유형 백과사전
+- /encyclopedia/[type]: 개별 유형 상세 (예: /encyclopedia/infp)
+- /compatibility: MBTI 궁합표
+- /compatibility/[type]: 특정 유형의 궁합 상세
+
+## 기술 스택
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS
+- Framer Motion

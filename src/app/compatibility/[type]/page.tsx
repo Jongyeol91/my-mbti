@@ -23,12 +23,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: 'MBTI 궁합 | 나의 MBTI 테스트' };
   }
 
+  const BASE_URL = 'https://my-mbti-jongyeol91s-projects.vercel.app';
+  const description = `${profile.type} ${profile.nickname}의 모든 유형별 궁합을 확인해보세요!`;
   return {
-    title: `${profile.type} 궁합 비교 | 나의 MBTI`,
-    description: `${profile.type} ${profile.nickname}의 모든 유형별 궁합을 확인해보세요!`,
+    title: `${profile.type} ${profile.nickname} 궁합 비교 | 나의 MBTI`,
+    description,
+    alternates: {
+      canonical: `${BASE_URL}/compatibility/${type}`,
+    },
     openGraph: {
-      title: `${profile.type} 궁합 비교`,
-      description: `${profile.type} ${profile.nickname}과(와) 잘 맞는 유형은?`,
+      title: `${profile.type} ${profile.nickname} 궁합 비교 | 나의 MBTI`,
+      description,
+      type: 'website',
+      locale: 'ko_KR',
+      url: `${BASE_URL}/compatibility/${type}`,
+    },
+    twitter: {
+      card: 'summary_large_image' as const,
+      title: `${profile.type} ${profile.nickname} 궁합 비교 | 나의 MBTI`,
+      description,
     },
   };
 }

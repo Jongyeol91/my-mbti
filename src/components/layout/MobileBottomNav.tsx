@@ -8,7 +8,7 @@ const navItems = [
   { href: "/", label: "홈" },
   { href: "/quiz/select", label: "테스트" },
   { href: "/encyclopedia", label: "유형 백과" },
-  { href: "/result", label: "내 결과" },
+  { href: "/compatibility", label: "궁합표" },
 ] as const;
 
 /**

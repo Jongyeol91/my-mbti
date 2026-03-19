@@ -1,390 +1,193 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useState, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { getProfile, ALL_TYPES } from '@/lib/profiles';
+import { getCompatibilityDetail } from '@/data/compatibility';
+import { getMBTILetterColor } from '@/lib/mbti-colors';
 import type { MBTIType, CompatibilityLevel } from '@/types/mbti';
 
-const COMPAT_LABEL: Record<CompatibilityLevel, { emoji: string; label: string; color: string; bg: string }> = {
-  best: { emoji: '💖', label: '최고의 궁합', color: 'text-pink-600', bg: 'bg-pink-50 border-pink-200' },
-  good: { emoji: '💛', label: '좋은 궁합', color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200' },
-  neutral: { emoji: '🤝', label: '보통 궁합', color: 'text-slate-600', bg: 'bg-slate-50 border-slate-200' },
-  bad: { emoji: '⚡', label: '안 맞는 궁합', color: 'text-purple-600', bg: 'bg-purple-50 border-purple-200' },
+const TYPES = ALL_TYPES as MBTIType[];
+
+const LEVEL_STYLE: Record<CompatibilityLevel, { bg: string; label: string }> = {
+  best: { bg: 'bg-primary/25', label: '최고' },
+  good: { bg: 'bg-decision-t/20', label: '좋은' },
+  neutral: { bg: 'bg-foreground/6', label: '보통' },
+  bad: { bg: 'bg-decision-f/20', label: '도전' },
 };
 
-function getCompatLevel(myType: MBTIType, otherType: MBTIType): CompatibilityLevel {
-  const profile = getProfile(myType);
+function getCompatLevel(a: MBTIType, b: MBTIType): CompatibilityLevel {
+  if (a === b) return 'neutral';
+  const profile = getProfile(a);
   if (!profile) return 'neutral';
   const { compatibility } = profile;
-  if (compatibility.best.includes(otherType)) return 'best';
-  if (compatibility.good.includes(otherType)) return 'good';
-  if (compatibility.bad.includes(otherType)) return 'bad';
+  if (compatibility.best.includes(b)) return 'best';
+  if (compatibility.good.includes(b)) return 'good';
+  if (compatibility.bad.includes(b)) return 'bad';
   return 'neutral';
 }
 
-function TypeSelector({
-  label,
-  value,
-  onChange,
-  gradient,
-}: {
-  label: string;
-  value: MBTIType | null;
-  onChange: (type: MBTIType) => void;
-  gradient?: [string, string];
-}) {
-  const [isOpen, setIsOpen] = useState(false);
-  const profile = value ? getProfile(value) : null;
+function ColoredType({ type, size = 'xs' }: { type: string; size?: 'xs' | 'sm' | 'lg' }) {
+  const cls = size === 'lg'
+    ? 'font-display text-xl font-black tracking-tight'
+    : size === 'sm'
+    ? 'font-display text-sm font-bold tracking-tight'
+    : 'font-display text-[10px] font-bold tracking-tight';
+  return (
+    <span className={cls}>
+      {type.split('').map((l, i) => (
+        <span key={i} className={getMBTILetterColor(l)}>{l}</span>
+      ))}
+    </span>
+  );
+}
+
+function CompatibilityMatrix() {
+  const [selected, setSelected] = useState<{ row: MBTIType; col: MBTIType } | null>(null);
 
   return (
-    <div className="flex-1">
-      <p className="mb-2 text-center text-xs font-semibold text-foreground/50">{label}</p>
-      <motion.button
-        whileTap={{ scale: 0.97 }}
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full rounded-2xl border-2 border-foreground/10 bg-surface p-3 text-center transition-colors hover:border-primary/30 sm:p-4"
-        style={
-          gradient
-            ? { borderColor: gradient[0] + '60' }
-            : undefined
-        }
-      >
-        {profile ? (
-          <div>
-            <span className="text-2xl sm:text-3xl">{profile.emoji}</span>
-            <p
-              className="mt-1 text-lg font-black sm:text-xl"
-              style={
-                gradient
-                  ? {
-                      background: `linear-gradient(135deg, ${gradient[0]}, ${gradient[1]})`,
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                    }
-                  : undefined
-              }
-            >
-              {value}
-            </p>
-            <p className="text-xs text-foreground/50">{profile.nickname}</p>
-          </div>
-        ) : (
-          <div className="py-2">
-            <span className="text-2xl">🎭</span>
-            <p className="mt-1 text-sm font-medium text-foreground/40">유형 선택</p>
-          </div>
-        )}
-      </motion.button>
+    <div>
+      {/* Legend */}
+      <div className="mb-4 flex flex-wrap gap-3 text-xs text-foreground/50">
+        {Object.entries(LEVEL_STYLE).map(([key, { bg, label }]) => (
+          <span key={key} className="flex items-center gap-1.5">
+            <span className={`inline-block h-3 w-3 rounded-sm ${bg}`} />
+            {label}
+          </span>
+        ))}
+      </div>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="mt-2 overflow-hidden rounded-2xl border border-foreground/10 bg-surface shadow-lg"
-          >
-            <div className="grid grid-cols-4 gap-1 p-2">
-              {ALL_TYPES.map((type) => {
-                const p = getProfile(type);
-                const isSelected = type === value;
-                return (
-                  <motion.button
-                    key={type}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => {
-                      onChange(type);
-                      setIsOpen(false);
-                    }}
-                    className={`rounded-xl p-1.5 text-center transition-colors sm:p-2 ${
-                      isSelected
-                        ? 'bg-primary/10 ring-2 ring-primary/40'
-                        : 'hover:bg-foreground/5'
-                    }`}
-                  >
-                    <span className="text-sm sm:text-base">{p?.emoji || '🎭'}</span>
-                    <p className="text-[10px] font-bold sm:text-xs">{type}</p>
-                  </motion.button>
-                );
-              })}
-            </div>
-          </motion.div>
-        )}
+      {/* Matrix table */}
+      <div className="overflow-x-auto -mx-1 pb-2">
+        <table className="w-full border-separate" style={{ borderSpacing: '2px' }}>
+          <thead>
+            <tr>
+              <th className="w-12" />
+              {TYPES.map((type) => (
+                <th key={type} className="px-0 py-1 text-center">
+                  <span className="text-[9px] font-semibold text-foreground/35 sm:text-[10px]">
+                    {type}
+                  </span>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {TYPES.map((rowType) => (
+              <tr key={rowType}>
+                <td className="pr-1 text-right">
+                  <span className="text-[9px] font-semibold text-foreground/35 sm:text-[10px]">
+                    {rowType}
+                  </span>
+                </td>
+                {TYPES.map((colType) => {
+                  const level = getCompatLevel(rowType, colType);
+                  const isSelf = rowType === colType;
+                  const isSelected =
+                    selected?.row === rowType && selected?.col === colType;
+
+                  return (
+                    <td key={colType} className="p-0">
+                      <button
+                        onClick={() =>
+                          isSelf
+                            ? null
+                            : setSelected(
+                                isSelected ? null : { row: rowType, col: colType }
+                              )
+                        }
+                        className={`block w-full aspect-square rounded-[3px] transition-opacity duration-150 ${
+                          LEVEL_STYLE[level].bg
+                        } ${
+                          isSelf ? 'opacity-20 cursor-default' : 'cursor-pointer hover:opacity-80 active:scale-90'
+                        } ${
+                          isSelected ? 'ring-2 ring-foreground/40 ring-offset-1' : ''
+                        }`}
+                        aria-label={`${rowType} × ${colType}: ${LEVEL_STYLE[level].label}`}
+                      />
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Detail panel */}
+      <AnimatePresence mode="wait">
+        {selected && (() => {
+          const { row, col } = selected;
+          const level = getCompatLevel(row, col);
+          const detail = getCompatibilityDetail(row, col);
+          const rowProfile = getProfile(row);
+          const colProfile = getProfile(col);
+
+          return (
+            <motion.div
+              key={`${row}-${col}`}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.2 }}
+              className="mt-4 rounded-lg bg-surface p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_2px_8px_rgba(0,0,0,0.03)]"
+            >
+              <div className="flex items-center gap-2 text-sm">
+                <ColoredType type={row} size="sm" />
+                <span className="text-foreground/25">×</span>
+                <ColoredType type={col} size="sm" />
+                <span className={`ml-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${LEVEL_STYLE[level].bg} text-foreground/60`}>
+                  {LEVEL_STYLE[level].label}
+                </span>
+              </div>
+
+              <p className="mt-2 text-sm font-medium text-foreground/75">{detail.title}</p>
+              <p className="mt-1 text-xs leading-relaxed text-foreground/50">{detail.description}</p>
+
+              {detail.tip && (
+                <p className="mt-2 text-[11px] text-foreground/35">Tip: {detail.tip}</p>
+              )}
+
+              <div className="mt-3 flex gap-3 text-xs">
+                <Link href={`/encyclopedia/${row.toLowerCase()}`} className="text-primary hover:underline">
+                  {row} ({rowProfile?.nickname}) →
+                </Link>
+                <Link href={`/encyclopedia/${col.toLowerCase()}`} className="text-primary hover:underline">
+                  {col} ({colProfile?.nickname}) →
+                </Link>
+              </div>
+            </motion.div>
+          );
+        })()}
       </AnimatePresence>
     </div>
   );
 }
 
 export default function CompatibilityPageClient() {
-  const searchParams = useSearchParams();
-  const initialType = (searchParams.get('type')?.toUpperCase() as MBTIType) || null;
-
-  const [myType, setMyType] = useState<MBTIType | null>(
-    initialType && ALL_TYPES.includes(initialType) ? initialType : null
-  );
-  const [otherType, setOtherType] = useState<MBTIType | null>(null);
-
-  const myProfile = myType ? getProfile(myType) : null;
-  const otherProfile = otherType ? getProfile(otherType) : null;
-
-  const compatLevel = useMemo(() => {
-    if (!myType || !otherType) return null;
-    return getCompatLevel(myType, otherType);
-  }, [myType, otherType]);
-
-  const compatInfo = compatLevel ? COMPAT_LABEL[compatLevel] : null;
-
-  const sharedDimensions = useMemo(() => {
-    if (!myType || !otherType) return [];
-    const dims = ['E/I', 'S/N', 'T/F', 'J/P'];
-    return dims.map((dim, i) => ({
-      dim,
-      myPref: myType[i],
-      otherPref: otherType[i],
-      match: myType[i] === otherType[i],
-    }));
-  }, [myType, otherType]);
-
   return (
-    <div className="relative min-h-dvh bg-background">
-      <div className="relative z-10 mx-auto max-w-2xl px-4 pb-24 pt-8 sm:px-6 md:px-8 lg:pt-12">
-        {/* Back button */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
-          <Link
-            href={myType ? `/result/${myType.toLowerCase()}` : '/'}
-            className="inline-flex items-center gap-1 rounded-full bg-surface/80 px-3 py-1.5 text-xs font-medium text-foreground/60 backdrop-blur-sm transition-colors hover:text-foreground sm:text-sm"
-          >
-            ← {myType ? '결과로 돌아가기' : '홈으로'}
-          </Link>
-        </motion.div>
+    <div className="mx-auto max-w-3xl px-4 pb-24 pt-8 md:pt-16">
+      <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+        MBTI 궁합표
+      </h1>
+      <p className="mt-1 text-sm text-foreground/40">
+        16가지 유형의 궁합을 한눈에 확인하세요. 셀을 탭하면 상세 설명을 볼 수 있습니다.
+      </p>
 
-        {/* Title */}
-        <motion.div
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mt-6 text-center sm:mt-8"
+      <div className="mt-6">
+        <Suspense>
+          <CompatibilityMatrix />
+        </Suspense>
+      </div>
+
+      <div className="mt-8 text-center">
+        <Link
+          href="/quiz/select"
+          className="inline-block rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-shadow duration-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.15)] active:scale-[0.96]"
         >
-          <h1 className="text-2xl font-black sm:text-3xl">💞 MBTI 궁합 비교</h1>
-          <p className="mt-2 text-sm text-foreground/50">두 유형의 궁합을 확인해보세요!</p>
-        </motion.div>
-
-        {/* Type Selectors */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="mt-8 flex items-start gap-3 sm:gap-4"
-        >
-          <TypeSelector
-            label="나의 유형"
-            value={myType}
-            onChange={setMyType}
-            gradient={myProfile?.gradient}
-          />
-          <div className="flex flex-col items-center pt-8">
-            <motion.span
-              animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{ repeat: Infinity, duration: 2, repeatDelay: 1 }}
-              className="text-2xl"
-            >
-              💕
-            </motion.span>
-          </div>
-          <TypeSelector
-            label="상대 유형"
-            value={otherType}
-            onChange={setOtherType}
-            gradient={otherProfile?.gradient}
-          />
-        </motion.div>
-
-        {/* Compatibility Result */}
-        <AnimatePresence mode="wait">
-          {myType && otherType && compatInfo && (
-            <motion.div
-              key={`${myType}-${otherType}`}
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: -10 }}
-              transition={{ duration: 0.4 }}
-              className="mt-8 space-y-6"
-            >
-              {/* Main result card */}
-              <div className={`rounded-3xl border-2 p-6 text-center sm:p-8 ${compatInfo.bg}`}>
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: 'spring', stiffness: 300, delay: 0.2 }}
-                  className="text-5xl sm:text-6xl"
-                >
-                  {compatInfo.emoji}
-                </motion.div>
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                  className={`mt-3 text-xl font-black sm:text-2xl ${compatInfo.color}`}
-                >
-                  {compatInfo.label}
-                </motion.p>
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.5 }}
-                  className="mt-2 text-sm text-foreground/60"
-                >
-                  {myProfile?.emoji} {myType} × {otherProfile?.emoji} {otherType}
-                </motion.p>
-              </div>
-
-              {/* Dimension comparison */}
-              <div className="rounded-3xl bg-surface p-4 shadow-sm sm:p-6">
-                <h3 className="mb-4 text-center text-sm font-bold sm:text-base">🔍 차원별 비교</h3>
-                <div className="space-y-3">
-                  {sharedDimensions.map((d, i) => (
-                    <motion.div
-                      key={d.dim}
-                      initial={{ opacity: 0, x: -16 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3 + i * 0.1 }}
-                      className="flex items-center gap-3"
-                    >
-                      <span className="w-10 text-xs font-bold text-foreground/40 sm:text-sm">{d.dim}</span>
-                      <div className="flex flex-1 items-center justify-between rounded-xl bg-foreground/5 px-3 py-2">
-                        <span
-                          className={`text-sm font-bold sm:text-base ${
-                            d.match ? 'text-green-600' : 'text-foreground/70'
-                          }`}
-                        >
-                          {d.myPref}
-                        </span>
-                        <span className="text-xs">{d.match ? '✅ 같음' : '🔄 다름'}</span>
-                        <span
-                          className={`text-sm font-bold sm:text-base ${
-                            d.match ? 'text-green-600' : 'text-foreground/70'
-                          }`}
-                        >
-                          {d.otherPref}
-                        </span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.8 }}
-                  className="mt-4 text-center text-xs text-foreground/40"
-                >
-                  {sharedDimensions.filter((d) => d.match).length}개 차원 일치 / {sharedDimensions.filter((d) => !d.match).length}개 차원 상이
-                </motion.p>
-              </div>
-
-              {/* Style comparison */}
-              {myProfile && otherProfile && (
-                <div className="space-y-3">
-                  <h3 className="text-center text-sm font-bold sm:text-base">💬 관계 스타일 비교</h3>
-                  {[
-                    { emoji: '❤️', label: '연애', myText: myProfile.loveStyle, otherText: otherProfile.loveStyle },
-                    { emoji: '🤝', label: '우정', myText: myProfile.friendshipStyle, otherText: otherProfile.friendshipStyle },
-                    { emoji: '💼', label: '직장', myText: myProfile.workStyle, otherText: otherProfile.workStyle },
-                  ].map((item, i) => (
-                    <motion.div
-                      key={item.label}
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.4 + i * 0.15 }}
-                      className="rounded-2xl bg-surface p-4 shadow-sm sm:p-5"
-                    >
-                      <h4 className="mb-3 text-center text-xs font-bold sm:text-sm">
-                        {item.emoji} {item.label} 스타일
-                      </h4>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="rounded-xl bg-foreground/5 p-3">
-                          <p className="mb-1 text-center text-[10px] font-bold text-foreground/40 sm:text-xs">
-                            {myProfile.emoji} {myType}
-                          </p>
-                          <p className="text-[11px] leading-relaxed text-foreground/60 sm:text-xs">
-                            {item.myText}
-                          </p>
-                        </div>
-                        <div className="rounded-xl bg-foreground/5 p-3">
-                          <p className="mb-1 text-center text-[10px] font-bold text-foreground/40 sm:text-xs">
-                            {otherProfile.emoji} {otherType}
-                          </p>
-                          <p className="text-[11px] leading-relaxed text-foreground/60 sm:text-xs">
-                            {item.otherText}
-                          </p>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              )}
-
-              {/* Links to individual profiles */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 }}
-                className="flex flex-col items-center gap-3 pt-4 sm:flex-row sm:justify-center"
-              >
-                <Link
-                  href={`/encyclopedia/${myType.toLowerCase()}`}
-                  className="w-full rounded-2xl bg-foreground/5 px-5 py-3 text-center text-sm font-semibold transition-colors hover:bg-foreground/10 sm:w-auto"
-                >
-                  🔍 {myType} 자세히 보기
-                </Link>
-                <Link
-                  href={`/encyclopedia/${otherType.toLowerCase()}`}
-                  className="w-full rounded-2xl bg-foreground/5 px-5 py-3 text-center text-sm font-semibold transition-colors hover:bg-foreground/10 sm:w-auto"
-                >
-                  🔍 {otherType} 자세히 보기
-                </Link>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Prompt when no selection */}
-        {(!myType || !otherType) && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="mt-12 text-center"
-          >
-            <p className="text-4xl">👆</p>
-            <p className="mt-2 text-sm text-foreground/40">
-              위에서 두 유형을 선택하면 궁합 결과를 볼 수 있어요!
-            </p>
-          </motion.div>
-        )}
-
-        {/* Bottom nav */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="mt-12 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4"
-        >
-          <Link
-            href="/quiz/select"
-            className="w-full rounded-2xl bg-gradient-to-r from-primary to-secondary px-6 py-3 text-center text-sm font-bold text-white shadow-lg shadow-primary/20 transition-transform active:scale-95 sm:w-auto"
-          >
-            🔄 테스트하기
-          </Link>
-          <Link
-            href="/encyclopedia"
-            className="w-full rounded-2xl bg-foreground/5 px-6 py-3 text-center text-sm font-semibold transition-colors hover:bg-foreground/10 sm:w-auto"
-          >
-            📚 16유형 백과사전
-          </Link>
-        </motion.div>
+          내 유형 테스트하기
+        </Link>
       </div>
     </div>
   );
