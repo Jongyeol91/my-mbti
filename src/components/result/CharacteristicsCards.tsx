@@ -2,9 +2,10 @@
 
 import { motion } from 'framer-motion';
 import type { MBTIType } from '@/types/mbti';
+import { Icon } from '@/components/ui/Icon';
 
 interface CharacteristicCard {
-  emoji: string;
+  icon: string;
   title: string;
   description: string;
   bgColor: string;
@@ -25,7 +26,7 @@ function getCharacteristics(type: MBTIType): CharacteristicCard[] {
   // 에너지 방향 (E/I)
   if (eOrI === 'E') {
     cards.push({
-      emoji: '🎤',
+      icon: 'users',
       title: '외향적 에너지',
       description: '사람들과 함께할 때 에너지가 충전돼요. 대화를 통해 생각을 정리하고, 새로운 사람을 만나는 게 즐거워요!',
       bgColor: 'bg-amber-50',
@@ -33,7 +34,7 @@ function getCharacteristics(type: MBTIType): CharacteristicCard[] {
     });
   } else {
     cards.push({
-      emoji: '📖',
+      icon: 'headphones',
       title: '내향적 에너지',
       description: '혼자만의 시간에 에너지가 충전돼요. 깊이 있는 생각과 소수의 친밀한 관계를 선호해요.',
       bgColor: 'bg-indigo-50',
@@ -44,7 +45,7 @@ function getCharacteristics(type: MBTIType): CharacteristicCard[] {
   // 인식 기능 (S/N)
   if (sOrN === 'S') {
     cards.push({
-      emoji: '🔍',
+      icon: 'compass',
       title: '현실 감각파',
       description: '오감으로 느끼는 구체적인 정보를 중시해요. 실제 경험과 검증된 사실을 기반으로 판단하는 실용주의자!',
       bgColor: 'bg-green-50',
@@ -52,7 +53,7 @@ function getCharacteristics(type: MBTIType): CharacteristicCard[] {
     });
   } else {
     cards.push({
-      emoji: '✨',
+      icon: 'lightbulb',
       title: '직관 상상파',
       description: '가능성과 패턴을 읽는 능력이 뛰어나요. 미래를 상상하고 큰 그림을 그리는 것을 좋아해요!',
       bgColor: 'bg-purple-50',
@@ -63,7 +64,7 @@ function getCharacteristics(type: MBTIType): CharacteristicCard[] {
   // 판단 기능 (T/F)
   if (tOrF === 'T') {
     cards.push({
-      emoji: '⚖️',
+      icon: 'chart',
       title: '논리적 사고',
       description: '객관적인 기준과 논리로 결정을 내려요. 공정함을 중요시하고, 감정보다 사실에 근거해서 판단해요.',
       bgColor: 'bg-sky-50',
@@ -71,7 +72,7 @@ function getCharacteristics(type: MBTIType): CharacteristicCard[] {
     });
   } else {
     cards.push({
-      emoji: '💕',
+      icon: 'heart',
       title: '감정적 공감',
       description: '사람들의 감정에 깊이 공감하고, 조화로운 관계를 중시해요. 따뜻한 마음으로 결정을 내리는 타입!',
       bgColor: 'bg-pink-50',
@@ -82,7 +83,7 @@ function getCharacteristics(type: MBTIType): CharacteristicCard[] {
   // 생활 양식 (J/P)
   if (jOrP === 'J') {
     cards.push({
-      emoji: '📋',
+      icon: 'clipboard',
       title: '체계적 계획가',
       description: '미리 계획을 세우고 차근차근 실행하는 걸 좋아해요. 정돈된 환경과 예측 가능한 일상이 편안해요!',
       bgColor: 'bg-teal-50',
@@ -90,7 +91,7 @@ function getCharacteristics(type: MBTIType): CharacteristicCard[] {
     });
   } else {
     cards.push({
-      emoji: '🎨',
+      icon: 'palette',
       title: '자유로운 탐험가',
       description: '상황에 따라 유연하게 대처하는 걸 선호해요. 새로운 가능성을 열어두고 즉흥적인 순간을 즐겨요!',
       bgColor: 'bg-violet-50',
@@ -143,9 +144,9 @@ export default function CharacteristicsCards({ type }: Props) {
               stiffness: 260,
               damping: 15,
             }}
-            className="mb-2 text-2xl sm:text-3xl"
+            className={`mb-2 ${card.textColor}`}
           >
-            {card.emoji}
+            <Icon name={card.icon} size={28} />
           </motion.div>
           <h3 className={`mb-1.5 text-sm font-bold ${card.textColor} sm:text-base`}>
             {card.title}

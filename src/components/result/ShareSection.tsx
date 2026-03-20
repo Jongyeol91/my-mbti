@@ -18,7 +18,7 @@ function getShareUrl(type: MBTIType): string {
 
 /** Get share text for social platforms */
 function getShareText(type: MBTIType, nickname: string): string {
-  return `나의 MBTI 유형은 ${type} (${nickname})! 🎯\n너도 테스트 해볼래?`;
+  return `나의 MBTI 유형은 ${type} (${nickname})!\n너도 테스트 해볼래?`;
 }
 
 /** Copy text to clipboard with fallback */
@@ -121,7 +121,7 @@ export default function ShareSection({ type, nickname }: ShareSectionProps) {
         objectType: 'feed',
         content: {
           title: `나의 MBTI는 ${type} (${nickname})`,
-          description: '나도 MBTI 테스트 해보기! 🎯',
+          description: '나도 MBTI 테스트 해보기!',
           imageUrl: `${window.location.origin}/share/${type.toLowerCase()}.png`,
           link: {
             mobileWebUrl: shareUrl,

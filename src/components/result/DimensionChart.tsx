@@ -4,11 +4,11 @@ import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import { useEffect, useRef } from 'react';
 import type { DimensionScore, MBTIDimension } from '@/types/mbti';
 
-const AXIS_LABELS: Record<MBTIDimension, { left: string; right: string; leftFull: string; rightFull: string; leftEmoji: string; rightEmoji: string }> = {
-  EI: { left: 'E', right: 'I', leftFull: '외향', rightFull: '내향', leftEmoji: '🗣️', rightEmoji: '📖' },
-  SN: { left: 'S', right: 'N', leftFull: '감각', rightFull: '직관', leftEmoji: '👁️', rightEmoji: '💭' },
-  TF: { left: 'T', right: 'F', leftFull: '사고', rightFull: '감정', leftEmoji: '🧠', rightEmoji: '❤️' },
-  JP: { left: 'J', right: 'P', leftFull: '판단', rightFull: '인식', leftEmoji: '📋', rightEmoji: '🎨' },
+const AXIS_LABELS: Record<MBTIDimension, { left: string; right: string; leftFull: string; rightFull: string }> = {
+  EI: { left: 'E', right: 'I', leftFull: '외향', rightFull: '내향' },
+  SN: { left: 'S', right: 'N', leftFull: '감각', rightFull: '직관' },
+  TF: { left: 'T', right: 'F', leftFull: '사고', rightFull: '감정' },
+  JP: { left: 'J', right: 'P', leftFull: '판단', rightFull: '인식' },
 };
 
 const AXIS_COLORS: Record<MBTIDimension, { left: string; right: string; leftGlow: string; rightGlow: string }> = {
@@ -73,7 +73,6 @@ export default function DimensionChart({ scores }: DimensionChartProps) {
             <div className="flex items-center justify-between">
               {/* Left label */}
               <div className={`flex items-center gap-1.5 ${isLeftDominant ? '' : 'opacity-50'}`}>
-                <span className="text-sm sm:text-base">{axis.leftEmoji}</span>
                 <span className="text-base font-black sm:text-lg">{axis.left}</span>
                 <span className="text-[11px] font-medium text-foreground/60 sm:text-xs">{axis.leftFull}</span>
               </div>
@@ -93,7 +92,6 @@ export default function DimensionChart({ scores }: DimensionChartProps) {
               <div className={`flex items-center gap-1.5 ${!isLeftDominant ? '' : 'opacity-50'}`}>
                 <span className="text-[11px] font-medium text-foreground/60 sm:text-xs">{axis.rightFull}</span>
                 <span className="text-base font-black sm:text-lg">{axis.right}</span>
-                <span className="text-sm sm:text-base">{axis.rightEmoji}</span>
               </div>
             </div>
 

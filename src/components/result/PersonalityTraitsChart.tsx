@@ -2,10 +2,11 @@
 
 import { motion } from 'framer-motion';
 import type { MBTIType } from '@/types/mbti';
+import { Icon } from '@/components/ui/Icon';
 
 interface TraitBar {
   label: string;
-  emoji: string;
+  icon: string;
   value: number; // 0~100
   color: string;
 }
@@ -16,7 +17,7 @@ function getPersonalityTraits(type: MBTIType): TraitBar[] {
   // E/I axis → 사교성
   traits.push({
     label: '사교성',
-    emoji: '🗣️',
+    icon: 'users',
     value: type[0] === 'E' ? 82 : 35,
     color: '#f472b6', // pink
   });
@@ -24,7 +25,7 @@ function getPersonalityTraits(type: MBTIType): TraitBar[] {
   // E/I axis → 에너지
   traits.push({
     label: '에너지',
-    emoji: '⚡',
+    icon: 'zap',
     value: type[0] === 'E' ? 78 : 55,
     color: '#fbbf24', // yellow
   });
@@ -32,7 +33,7 @@ function getPersonalityTraits(type: MBTIType): TraitBar[] {
   // S/N axis → 상상력
   traits.push({
     label: '상상력',
-    emoji: '🌈',
+    icon: 'palette',
     value: type[1] === 'N' ? 88 : 40,
     color: '#a78bfa', // purple
   });
@@ -40,7 +41,7 @@ function getPersonalityTraits(type: MBTIType): TraitBar[] {
   // S/N axis → 현실감각
   traits.push({
     label: '현실감각',
-    emoji: '🎯',
+    icon: 'target',
     value: type[1] === 'S' ? 85 : 38,
     color: '#34d399', // green
   });
@@ -48,7 +49,7 @@ function getPersonalityTraits(type: MBTIType): TraitBar[] {
   // T/F axis → 공감능력
   traits.push({
     label: '공감능력',
-    emoji: '💗',
+    icon: 'heart',
     value: type[2] === 'F' ? 90 : 42,
     color: '#fb7185', // rose
   });
@@ -56,7 +57,7 @@ function getPersonalityTraits(type: MBTIType): TraitBar[] {
   // T/F axis → 분석력
   traits.push({
     label: '분석력',
-    emoji: '🧠',
+    icon: 'brain',
     value: type[2] === 'T' ? 87 : 45,
     color: '#60a5fa', // blue
   });
@@ -64,7 +65,7 @@ function getPersonalityTraits(type: MBTIType): TraitBar[] {
   // J/P axis → 계획성
   traits.push({
     label: '계획성',
-    emoji: '📅',
+    icon: 'calendar',
     value: type[3] === 'J' ? 85 : 30,
     color: '#2dd4bf', // teal
   });
@@ -72,7 +73,7 @@ function getPersonalityTraits(type: MBTIType): TraitBar[] {
   // J/P axis → 유연성
   traits.push({
     label: '유연성',
-    emoji: '🌊',
+    icon: 'compass',
     value: type[3] === 'P' ? 88 : 35,
     color: '#818cf8', // indigo
   });
@@ -100,7 +101,7 @@ export default function PersonalityTraitsChart({ type }: Props) {
         >
           <div className="mb-1 flex items-center justify-between">
             <span className="flex items-center gap-1.5 text-xs font-semibold text-foreground/70 sm:text-sm">
-              <span className="text-sm sm:text-base">{trait.emoji}</span>
+              <Icon name={trait.icon} size={14} />
               {trait.label}
             </span>
             <motion.span

@@ -14,9 +14,9 @@ type Tab = 'strengths' | 'weaknesses';
 export default function StrengthWeaknessSection({ data, gradient }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>('strengths');
 
-  const tabs: { key: Tab; label: string; emoji: string }[] = [
-    { key: 'strengths', label: '강점', emoji: '💪' },
-    { key: 'weaknesses', label: '약점', emoji: '🔧' },
+  const tabs: { key: Tab; label: string }[] = [
+    { key: 'strengths', label: '강점' },
+    { key: 'weaknesses', label: '약점' },
   ];
 
   const items = activeTab === 'strengths' ? data.strengths : data.weaknesses;
@@ -37,7 +37,7 @@ export default function StrengthWeaknessSection({ data, gradient }: Props) {
             }`}
           >
             <span className="relative z-10">
-              {tab.emoji} {tab.label}
+              {tab.label}
             </span>
             {activeTab === tab.key && (
               <motion.div

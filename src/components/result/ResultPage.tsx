@@ -12,6 +12,7 @@ import CharacteristicsCards from './CharacteristicsCards';
 import StrengthWeaknessSection from './StrengthWeaknessSection';
 import CelebritySection from './CelebritySection';
 import CareerRecommendationsSection from './CareerRecommendationsSection';
+import { Icon } from '@/components/ui/Icon';
 
 interface ResultPageProps {
   profile: MBTITypeProfile;
@@ -55,12 +56,12 @@ function TypeRevealAnimation({ type, gradient }: { type: string; gradient: [stri
   );
 }
 
-/** Confetti particle component - uses stable random values */
+/** Confetti particle component - uses colored dots instead of emoji */
 function ConfettiParticles() {
   const [particles] = useState(() =>
     Array.from({ length: 30 }).map((_, i) => ({
       id: i,
-      emoji: ['🎉', '✨', '💖', '🌟', '🎊', '💫', '🌈', '⭐'][i % 8],
+      color: ['#f472b6', '#fbbf24', '#a78bfa', '#34d399', '#60a5fa', '#fb7185', '#818cf8', '#2dd4bf'][i % 8],
       x: Math.random() * 100,
       delay: Math.random() * 0.8,
       duration: Math.random() * 2 + 2.5,
@@ -90,10 +91,9 @@ function ConfettiParticles() {
             delay: p.delay,
             ease: 'linear',
           }}
-          className="absolute text-lg sm:text-xl"
-        >
-          {p.emoji}
-        </motion.div>
+          className="absolute h-2.5 w-2.5 rounded-full sm:h-3 sm:w-3"
+          style={{ backgroundColor: p.color }}
+        />
       ))}
     </div>
   );
@@ -218,14 +218,17 @@ export default function ResultPage({ profile, scores, mode, isLoaded = true }: R
           transition={{ duration: 0.3 }}
           className="mt-6 text-center sm:mt-8"
         >
-          {/* Emoji reveal with spring bounce */}
+          {/* Type badge reveal with spring bounce */}
           <motion.div
             initial={{ scale: 0, rotate: -180 }}
             animate={revealStage >= 1 ? { scale: 1, rotate: 0 } : {}}
             transition={{ type: 'spring', stiffness: 200, damping: 12 }}
-            className="mb-4 text-5xl sm:text-6xl md:text-7xl"
+            className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl text-2xl font-black text-white sm:h-20 sm:w-20 sm:text-3xl md:h-24 md:w-24 md:text-4xl"
+            style={{
+              background: `linear-gradient(135deg, ${profile.gradient[0]}, ${profile.gradient[1]})`,
+            }}
           >
-            {profile.emoji}
+            {profile.type.slice(0, 2)}
           </motion.div>
 
           {/* Type label and name - staged reveal */}
@@ -320,7 +323,7 @@ export default function ResultPage({ profile, scores, mode, isLoaded = true }: R
           transition={{ duration: 0.5 }}
           className="mt-8 sm:mt-10"
         >
-          <h2 className="mb-4 text-center text-lg font-bold sm:text-xl">📊 성격 차원 분석</h2>
+          <h2 className="mb-4 flex items-center justify-center gap-1.5 text-lg font-bold sm:text-xl"><Icon name="chart" size={20} /> 성격 차원 분석</h2>
           <div className="rounded-3xl bg-surface p-4 shadow-sm sm:p-6">
             <DimensionChart scores={displayScores} />
           </div>
@@ -400,7 +403,7 @@ export default function ResultPage({ profile, scores, mode, isLoaded = true }: R
           transition={{ duration: 0.5 }}
           className="mt-8 sm:mt-10"
         >
-          <h2 className="mb-4 text-center text-lg font-bold sm:text-xl">📈 성격 수치 분석</h2>
+          <h2 className="mb-4 flex items-center justify-center gap-1.5 text-lg font-bold sm:text-xl"><Icon name="trending" size={20} /> 성격 수치 분석</h2>
           <div className="rounded-3xl bg-surface p-4 shadow-sm sm:p-6">
             <PersonalityTraitsChart type={profile.type} />
           </div>
@@ -415,7 +418,7 @@ export default function ResultPage({ profile, scores, mode, isLoaded = true }: R
           transition={{ duration: 0.5 }}
           className="mt-8 sm:mt-10"
         >
-          <h2 className="mb-4 text-center text-lg font-bold sm:text-xl">💪 강점 & 약점</h2>
+          <h2 className="mb-4 flex items-center justify-center gap-1.5 text-lg font-bold sm:text-xl"><Icon name="strength" size={20} /> 강점 & 약점</h2>
           <StrengthWeaknessSection
             data={profile.strengthWeakness}
             gradient={profile.gradient}
@@ -431,11 +434,11 @@ export default function ResultPage({ profile, scores, mode, isLoaded = true }: R
           transition={{ duration: 0.5 }}
           className="mt-8 sm:mt-10"
         >
-          <h2 className="mb-4 text-center text-lg font-bold sm:text-xl">💕 관계 스타일</h2>
+          <h2 className="mb-4 flex items-center justify-center gap-1.5 text-lg font-bold sm:text-xl"><Icon name="heart" size={20} /> 관계 스타일</h2>
           <div className="space-y-3">
             {[
-              { emoji: '❤️', label: '연애 스타일', text: profile.loveStyle },
-              { emoji: '🤝', label: '친구 관계', text: profile.friendshipStyle },
+              { icon: 'heart' as const, label: '연애 스타일', text: profile.loveStyle },
+              { icon: 'users' as const, label: '친구 관계', text: profile.friendshipStyle },
             ].map((item, i) => (
               <motion.div
                 key={item.label}
@@ -445,8 +448,8 @@ export default function ResultPage({ profile, scores, mode, isLoaded = true }: R
                 transition={{ delay: i * 0.1, duration: 0.4 }}
                 className="rounded-2xl bg-surface p-4 shadow-sm sm:p-5"
               >
-                <h3 className="mb-2 text-sm font-bold sm:text-base">
-                  {item.emoji} {item.label}
+                <h3 className="mb-2 flex items-center gap-1.5 text-sm font-bold sm:text-base">
+                  <Icon name={item.icon} size={16} /> {item.label}
                 </h3>
                 <p className="text-xs leading-relaxed text-foreground/70 sm:text-sm sm:leading-relaxed">
                   {item.text}
@@ -465,7 +468,7 @@ export default function ResultPage({ profile, scores, mode, isLoaded = true }: R
           transition={{ duration: 0.5 }}
           className="mt-8 sm:mt-10"
         >
-          <h2 className="mb-4 text-center text-lg font-bold sm:text-xl">🏆 커리어 추천</h2>
+          <h2 className="mb-4 flex items-center justify-center gap-1.5 text-lg font-bold sm:text-xl"><Icon name="briefcase" size={20} /> 커리어 추천</h2>
           <CareerRecommendationsSection
             careers={profile.careers}
             workStyle={profile.workStyle}
@@ -483,7 +486,7 @@ export default function ResultPage({ profile, scores, mode, isLoaded = true }: R
           transition={{ duration: 0.5 }}
           className="mt-8 sm:mt-10"
         >
-          <h2 className="mb-4 text-center text-lg font-bold sm:text-xl">⭐ 같은 유형 유명인</h2>
+          <h2 className="mb-4 flex items-center justify-center gap-1.5 text-lg font-bold sm:text-xl"><Icon name="star" size={20} /> 같은 유형 유명인</h2>
           <CelebritySection celebrities={profile.celebrities} gradient={profile.gradient} />
         </motion.section>
 

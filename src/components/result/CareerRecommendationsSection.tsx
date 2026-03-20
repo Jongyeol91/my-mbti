@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import type { CareerInfo, MBTIType } from '@/types/mbti';
+import { Icon } from '@/components/ui/Icon';
 
 interface CareerRecommendationsSectionProps {
   careers: CareerInfo[] | string[];
@@ -12,61 +13,61 @@ interface CareerRecommendationsSectionProps {
 
 /** Work environment preferences derived from MBTI dimensions */
 function getWorkEnvironmentPreferences(type: MBTIType): {
-  emoji: string;
+  icon: string;
   label: string;
   description: string;
 }[] {
-  const prefs: { emoji: string; label: string; description: string }[] = [];
+  const prefs: { icon: string; label: string; description: string }[] = [];
 
   // E/I axis - social environment
   if (type[0] === 'E') {
     prefs.push(
-      { emoji: '👥', label: '협업 중심', description: '팀 프로젝트와 브레인스토밍을 즐기는 환경' },
-      { emoji: '🗣️', label: '소통 활발', description: '회의와 토론이 자유로운 개방적 분위기' },
+      { icon: 'users', label: '협업 중심', description: '팀 프로젝트와 브레인스토밍을 즐기는 환경' },
+      { icon: 'users', label: '소통 활발', description: '회의와 토론이 자유로운 개방적 분위기' },
     );
   } else {
     prefs.push(
-      { emoji: '🎧', label: '집중 환경', description: '독립적으로 깊이 몰입할 수 있는 공간' },
-      { emoji: '📝', label: '자율 근무', description: '재택근무나 유연한 근무 형태를 선호' },
+      { icon: 'headphones', label: '집중 환경', description: '독립적으로 깊이 몰입할 수 있는 공간' },
+      { icon: 'clipboard', label: '자율 근무', description: '재택근무나 유연한 근무 형태를 선호' },
     );
   }
 
   // S/N axis - work approach
   if (type[1] === 'S') {
     prefs.push(
-      { emoji: '📋', label: '체계적 프로세스', description: '명확한 업무 절차와 매뉴얼이 있는 환경' },
-      { emoji: '🎯', label: '구체적 목표', description: '실질적이고 측정 가능한 성과 기준' },
+      { icon: 'clipboard', label: '체계적 프로세스', description: '명확한 업무 절차와 매뉴얼이 있는 환경' },
+      { icon: 'target', label: '구체적 목표', description: '실질적이고 측정 가능한 성과 기준' },
     );
   } else {
     prefs.push(
-      { emoji: '💡', label: '창의적 자유', description: '새로운 아이디어를 실험하고 혁신할 수 있는 곳' },
-      { emoji: '🚀', label: '비전 지향', description: '미래를 만들어가는 도전적인 프로젝트' },
+      { icon: 'lightbulb', label: '창의적 자유', description: '새로운 아이디어를 실험하고 혁신할 수 있는 곳' },
+      { icon: 'zap', label: '비전 지향', description: '미래를 만들어가는 도전적인 프로젝트' },
     );
   }
 
   // T/F axis - decision culture
   if (type[2] === 'T') {
     prefs.push(
-      { emoji: '📊', label: '성과 기반', description: '객관적 데이터와 실력으로 평가받는 문화' },
-      { emoji: '⚡', label: '효율 추구', description: '불필요한 절차 없이 빠르게 실행하는 조직' },
+      { icon: 'chart', label: '성과 기반', description: '객관적 데이터와 실력으로 평가받는 문화' },
+      { icon: 'zap', label: '효율 추구', description: '불필요한 절차 없이 빠르게 실행하는 조직' },
     );
   } else {
     prefs.push(
-      { emoji: '💛', label: '따뜻한 문화', description: '서로를 존중하고 배려하는 팀 분위기' },
-      { emoji: '🌱', label: '성장 지원', description: '구성원의 발전과 웰빙을 중시하는 조직' },
+      { icon: 'smile', label: '따뜻한 문화', description: '서로를 존중하고 배려하는 팀 분위기' },
+      { icon: 'sprout', label: '성장 지원', description: '구성원의 발전과 웰빙을 중시하는 조직' },
     );
   }
 
   // J/P axis - structure preference
   if (type[3] === 'J') {
     prefs.push(
-      { emoji: '📅', label: '계획적 운영', description: '일정과 마감이 명확하게 관리되는 환경' },
-      { emoji: '✅', label: '안정적 구조', description: '역할과 책임이 분명한 체계적 조직' },
+      { icon: 'calendar', label: '계획적 운영', description: '일정과 마감이 명확하게 관리되는 환경' },
+      { icon: 'check', label: '안정적 구조', description: '역할과 책임이 분명한 체계적 조직' },
     );
   } else {
     prefs.push(
-      { emoji: '🎨', label: '유연한 환경', description: '상황에 따라 자유롭게 적응할 수 있는 곳' },
-      { emoji: '🔄', label: '다양한 경험', description: '새로운 프로젝트와 역할을 시도할 기회' },
+      { icon: 'palette', label: '유연한 환경', description: '상황에 따라 자유롭게 적응할 수 있는 곳' },
+      { icon: 'refresh', label: '다양한 경험', description: '새로운 프로젝트와 역할을 시도할 기회' },
     );
   }
 
@@ -74,13 +75,13 @@ function getWorkEnvironmentPreferences(type: MBTIType): {
 }
 
 /** Career category mapping for visual grouping */
-function getCareerCategory(type: MBTIType): { icon: string; label: string } {
+function getCareerCategory(type: MBTIType): { iconName: string; label: string } {
   const dim = `${type[1]}${type[2]}` as 'ST' | 'SF' | 'NT' | 'NF';
   switch (dim) {
-    case 'ST': return { icon: '🔧', label: '실용/관리 분야' };
-    case 'SF': return { icon: '🤗', label: '봉사/지원 분야' };
-    case 'NT': return { icon: '🧪', label: '전략/분석 분야' };
-    case 'NF': return { icon: '✨', label: '창의/성장 분야' };
+    case 'ST': return { iconName: 'target', label: '실용/관리 분야' };
+    case 'SF': return { iconName: 'heart', label: '봉사/지원 분야' };
+    case 'NT': return { iconName: 'brain', label: '전략/분석 분야' };
+    case 'NF': return { iconName: 'lightbulb', label: '창의/성장 분야' };
   }
 }
 
@@ -136,7 +137,7 @@ export default function CareerRecommendationsSection({
             color: gradient[0],
           }}
         >
-          {category.icon} {category.label}에서 빛나는 유형
+          <Icon name={category.iconName} size={14} /> {category.label}에서 빛나는 유형
         </span>
       </motion.div>
 
@@ -145,7 +146,6 @@ export default function CareerRecommendationsSection({
         {careers.map((career, i) => {
           const isDetailed = typeof career !== 'string';
           const title = isDetailed ? career.title : career;
-          const emoji = isDetailed ? career.emoji : '💼';
           const reason = isDetailed ? career.reason : null;
 
           return (
@@ -166,7 +166,7 @@ export default function CareerRecommendationsSection({
                   background: `linear-gradient(90deg, ${gradient[0]}, ${gradient[1]})`,
                 }}
               />
-              <div className="mb-1.5 text-xl sm:text-2xl">{emoji}</div>
+              <div className="mb-1.5 text-foreground/60"><Icon name="briefcase" size={22} /></div>
               <p className="text-xs font-semibold leading-tight sm:text-sm">{title}</p>
               {reason && (
                 <motion.p
@@ -191,7 +191,7 @@ export default function CareerRecommendationsSection({
         transition={{ duration: 0.4 }}
         className="rounded-2xl bg-surface p-4 shadow-sm sm:p-5"
       >
-        <h3 className="mb-2 text-sm font-bold sm:text-base">💼 직장 생활 스타일</h3>
+        <h3 className="mb-2 flex items-center gap-1.5 text-sm font-bold sm:text-base"><Icon name="briefcase" size={16} /> 직장 생활 스타일</h3>
         <p className="text-xs leading-relaxed text-foreground/70 sm:text-sm sm:leading-relaxed">
           {workStyle}
         </p>
@@ -199,8 +199,8 @@ export default function CareerRecommendationsSection({
 
       {/* Work Environment Preferences */}
       <div className="rounded-3xl bg-surface p-4 shadow-sm sm:p-6">
-        <h3 className="mb-4 text-center text-sm font-bold sm:text-base">
-          🏢 이상적인 근무 환경
+        <h3 className="mb-4 flex items-center justify-center gap-1.5 text-sm font-bold sm:text-base">
+          <Icon name="briefcase" size={16} /> 이상적인 근무 환경
         </h3>
         <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3">
           {workPrefs.map((pref, i) => (
@@ -214,12 +214,12 @@ export default function CareerRecommendationsSection({
               whileHover={{ x: 4 }}
               className="flex items-start gap-3 rounded-xl bg-background/60 p-3 transition-colors hover:bg-background/80"
             >
-              <span className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-base sm:h-9 sm:w-9 sm:text-lg"
+              <span className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg sm:h-9 sm:w-9"
                 style={{
                   background: `linear-gradient(135deg, ${gradient[0]}15, ${gradient[1]}15)`,
                 }}
               >
-                {pref.emoji}
+                <Icon name={pref.icon} size={16} />
               </span>
               <div className="min-w-0">
                 <p className="text-xs font-bold sm:text-sm">{pref.label}</p>
@@ -243,8 +243,8 @@ export default function CareerRecommendationsSection({
           background: `linear-gradient(135deg, ${gradient[0]}10, ${gradient[1]}10)`,
         }}
       >
-        <p className="text-[10px] text-foreground/50 sm:text-xs">
-          💡 <span className="font-semibold">{type}</span> 유형은 자신의 강점을 살릴 수 있는 환경에서 최고의 성과를 발휘해요!
+        <p className="flex items-center justify-center gap-1 text-[10px] text-foreground/50 sm:text-xs">
+          <Icon name="lightbulb" size={12} /> <span className="font-semibold">{type}</span> 유형은 자신의 강점을 살릴 수 있는 환경에서 최고의 성과를 발휘해요!
         </p>
       </motion.div>
     </div>
