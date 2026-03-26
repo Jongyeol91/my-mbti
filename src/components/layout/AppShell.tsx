@@ -32,6 +32,15 @@ export default function AppShell({ children }: AppShellProps) {
         {children}
       </main>
 
+      {/* Footer disclaimer */}
+      {!isQuizActive && (
+        <footer className="border-t border-border px-4 py-6 text-center text-[11px] leading-relaxed text-foreground/25 md:py-8">
+          이 테스트는 공식 MBTI® 검사가 아닌 재미용 성격 유형 테스트입니다.
+          <br className="sm:hidden" />{" "}
+          MBTI는 The Myers-Briggs Company의 등록 상표입니다.
+        </footer>
+      )}
+
       <MobileBottomNav />
     </>
   );
